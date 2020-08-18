@@ -1,5 +1,6 @@
 <template>
     <div id="parentBlock" v-bind:class="{'logged-in': !userState }">
+        
         <div class="messages-div">
             <button v-on:click="signOut" id="signOut"> Log out </button>
 
@@ -7,6 +8,7 @@
                 <ChatBubble v-bind:msg="msg" />
             </div> 
         </div>
+
         <div class="chat-div">
             <form @submit.prevent="addMessageContent">
                 <textarea v-model="message" name="message" placeholder="Enter your message here." id="mainPlaceholder" autofocus=true rows=3>
@@ -32,6 +34,7 @@ export default {
     },
     methods: {
         addMessageContent(){
+            //Method that emits the content from textarea
             console.log("Sending message from Chatblock..")
             const newMessage = this.message
             this.$emit('send-msg', newMessage)
@@ -39,6 +42,7 @@ export default {
             this.message = ''
         },
         signOut(){
+            //Signs out the user from firebase, then emits change-state command for change in user state in the app component
             firebase.auth().signOut()
             .then( result => {
                 this.$emit('change-state')
@@ -49,9 +53,6 @@ export default {
                 console.log(error)
             })
         }
-    },
-    created() {
-        // console.log(this.msg_array)
     }
 }
 </script>

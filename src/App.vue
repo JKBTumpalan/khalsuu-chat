@@ -2,7 +2,7 @@
   <div id="app">
     <HomeMessage msg="Welcome to KhalsuuChat"/>
     <AuthBlock v-bind:userState="userState" v-on:change-state="changeState" />
-    <ChatBlock v-bind:userState="userState" v-on:change-state="changeState" v-bind:msg_array="msg_array" v-on:get-msgs="getMessages" v-on:send-msg="sendMessage" />
+    <ChatBlock v-bind:userState="userState" v-on:change-state="changeState" v-bind:msg_array="msg_array" v-on:send-msg="sendMessage" />
   </div>
 </template>
 
@@ -27,7 +27,9 @@ export default {
     }
   }, 
   methods: {
+    //Method to get all existing data in the firebase database after the component is created.
     getMessages(){
+      console.log("Getting messages...")
       this.msg_array = []
       let ref = firebase.database().ref('/messages')
 
@@ -40,15 +42,16 @@ export default {
           })
       })
     },
+
+    //Method to get the message content from emit, then create a message object to be pushed in the firebase database.
     sendMessage(message){
       console.log("Sending message..")
       let messageRef = firebase.database().ref('/messages')
       this.user_displayName = (firebase.auth().currentUser.displayName == null) ? "Anonymous" : firebase.auth().currentUser.displayName
-  
-      console.log("Display name is")
-      console.log(this.user_displayName)
-      console.log(message)
 
+      if(this.user_displayName == undefined){
+        this.user_displayName = "Undefined"
+      }
       const messageObj = {
         sender: this.user_displayName,
         msg_content: message
@@ -57,6 +60,8 @@ export default {
       messageRef.push(messageObj)
 
     },
+
+    //Method to change instance state whenever a user logs in or out.
     changeState(){
       this.userState = !this.userState
     }
@@ -64,6 +69,8 @@ export default {
   created() {
     this.getMessages()
 
+
+    //Codeblock that updates the message array whenever a new child gets appended in the firebase database. (Does not support real time deleting)
     let mainData = firebase.database().ref('/messages');
     mainData.on('child_added', (data) => {
       console.log(data.val())

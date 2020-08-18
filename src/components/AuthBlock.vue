@@ -14,12 +14,14 @@ export default {
       userState: Boolean
     },
     methods: {
+      //Sign in using google auth
       signGoogle() {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().languageCode = 'tl'
         firebase.auth()
           .signInWithPopup(provider)
           .then(result => {
+            this.$emit('change-state')
             console.log(result.credential.accessToken);
             console.log(result.user);
           })
@@ -27,14 +29,15 @@ export default {
             console.log(error.code);
             console.log(error.message);
           })
-        this.$emit('change-state')
       },
+      //Anonymous sign in
       signAnon(){
         firebase.auth().signInAnonymously()
           .then(() => {console.log('Logged in as anonymous!')})
           .catch((error) => console.log(error))
 
         this.$emit('change-state')
+
       },
     }
 }

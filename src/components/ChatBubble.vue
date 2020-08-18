@@ -9,10 +9,7 @@
 <script>
 export default {
     name: 'ChatBubble',
-    props:["msg"],
-    methods: {
-
-    }
+    props:["msg"]
 }
 </script>
 
