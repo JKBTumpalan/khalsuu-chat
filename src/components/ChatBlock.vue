@@ -46,6 +46,9 @@ export default {
             firebase.auth().signOut()
             .then( result => {
                 this.$emit('change-state')
+
+                this.$emit('log-out')
+
                 console.log("Log out success.")
                 console.log(result)
             })

@@ -2,6 +2,7 @@
   <div id="auth-div" v-bind:class="{'logged-in': userState }">
       <button class ="signButton" v-on:click= "signGoogle"> <img src="./../assets/google.png" class ="signIcons"> Sign in with Google </button>
       <button class ="signButton" v-on:click= "signAnon"> <img src="./../assets/guest.png" class ="signIcons"> Sign in as Guest </button>
+      <input type="text" v-model="alias" placeholder="Enter alias" name="alias" class="textInput">
   </div>
 </template>
 
@@ -36,6 +37,8 @@ export default {
           .then(() => {console.log('Logged in as anonymous!')})
           .catch((error) => console.log(error))
 
+        console.log(this.alias)
+        this.$emit('change-display-name', this.alias)
         this.$emit('change-state')
 
       },

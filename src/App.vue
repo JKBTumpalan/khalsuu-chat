@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <HomeMessage msg="Welcome to KhalsuuChat"/>
-    <AuthBlock v-bind:userState="userState" v-on:change-state="changeState" />
-    <ChatBlock v-bind:userState="userState" v-on:change-state="changeState" v-bind:msg_array="msg_array" v-on:send-msg="sendMessage" />
+    <AuthBlock v-bind:userState="userState" v-on:change-state="changeState" v-on:change-display-name="changeDisplayName"/>
+    <ChatBlock v-bind:userState="userState" v-on:change-state="changeState" v-bind:msg_array="msg_array" v-on:log-out="logOut" v-on:send-msg="sendMessage" />
   </div>
 </template>
 
@@ -23,7 +23,9 @@ export default {
     return {
       msg_array:[],
       user_displayName: null,
-      userState: null
+      userState: null,
+      msg_listener: null,
+      alias: null,
     }
   }, 
   methods: {
@@ -47,11 +49,11 @@ export default {
     sendMessage(message){
       console.log("Sending message..")
       let messageRef = firebase.database().ref('/messages')
-      this.user_displayName = (firebase.auth().currentUser.displayName == null) ? "Anonymous" : firebase.auth().currentUser.displayName
-
-      if(this.user_displayName == undefined){
-        this.user_displayName = "Undefined"
+      this.user_displayName = (firebase.auth().currentUser.displayName == null) ? this.alias : firebase.auth().currentUser.displayName
+      if (this.user_displayName == undefined) {
+        this.user_displayName = "Anonymous"
       }
+
       const messageObj = {
         sender: this.user_displayName,
         msg_content: message
@@ -60,10 +62,22 @@ export default {
       messageRef.push(messageObj)
 
     },
+    //Change alias if loggin in via guest
+    changeDisplayName(alias){
+      console.log("Changing nickname..")
+      console.log(alias)
+      this.alias = alias
+    },
 
     //Method to change instance state whenever a user logs in or out.
     changeState(){
       this.userState = !this.userState
+    },
+
+    //Turn off listeners on the database reference
+    logOut(){
+      let mainData = firebase.database().ref('/messages');
+          mainData.off('value', this.msg_listener)
     }
   },
   created() {
@@ -72,8 +86,8 @@ export default {
 
     //Codeblock that updates the message array whenever a new child gets appended in the firebase database. (Does not support real time deleting)
     let mainData = firebase.database().ref('/messages');
-    mainData.on('child_added', (data) => {
-      console.log(data.val())
+    this.msg_listener = mainData.on('child_added', (data) => {
+      // console.log(data.val())
       this.msg_array = [...this.msg_array, data.val()]
     })
   }
