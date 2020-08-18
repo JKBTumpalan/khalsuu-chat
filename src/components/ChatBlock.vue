@@ -1,11 +1,13 @@
 <template>
     <div id="parentBlock" v-bind:class="{'logged-in': !userState }">
-        <button v-on:click="signOut" id="signOut"> Log out </button>
+        <div class="messages-div">
+            <button v-on:click="signOut" id="signOut"> Log out </button>
 
-        <div v-bind:key="msg.key" v-for="msg in msg_array">
-            <ChatBubble v-bind:msg="msg" />
-        </div> 
-        <div>
+            <div v-bind:key="msg.key" v-for="msg in msg_array">
+                <ChatBubble v-bind:msg="msg" />
+            </div> 
+        </div>
+        <div class="chat-div">
             <form @submit.prevent="addMessageContent">
                 <textarea v-model="message" name="message" placeholder="Enter your message here." id="mainPlaceholder" autofocus=true rows=3>
                 </textarea>
@@ -64,12 +66,28 @@ export default {
         height: 80vh;
         overflow-x: auto;
         font-size: 1em;
+        overflow: hidden;
     }
 
+    .messages-div {
+        border: 1px solid rgb(47, 109, 255);
+        overflow-y: scroll;
+        height: 71vh;
+    }
+
+    .chat-div {
+        border: 1px solid rgb(47, 109, 255);
+        height: 9vh;
+    }
     #mainPlaceholder {
-        margin: 10px;
+        margin: 5px;
         width: 390px;
         float: left;
+        border: 3px solid #cccccc;
+        padding: 5px;
+        font-family: Tahoma, sans-serif;
+        background-position: bottom right;
+        background-repeat: no-repeat;
     }
 
     #signOut {
@@ -86,21 +104,22 @@ export default {
     #signOut:hover {
         background-color: rgb(243, 23, 23);
         color: white;
-        transition: 0.3s ease-in-out;
-        transform: scale(1.1, 1.1)
+        transition-duration: 0.3s;
+        transform: rotate(360deg);
     }
 
     .button {
+        float: left;
         width: 60px;
         padding: 10px;
-        float: left;
         margin-top: 10px;
+        margin-left: 5px;
     }
 
     .button:hover {
         /* transition: 0.3 ease-in-out; */
-        transition-duration: 0.8s;
-        transform: rotate(360deg);
+        transition: 0.3s ease-in-out;
+        transform: scale(1.1, 1.1)
     }
 
     .logged-in {

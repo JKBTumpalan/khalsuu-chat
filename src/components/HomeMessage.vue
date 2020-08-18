@@ -5,7 +5,7 @@
     <p>
       For a guide on how to use this real-time chat web application,<br>
       check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">KhalsuuChat github repository.</a>.
+      <a href="https://github.com/JKBTumpalan/khalsuu-chat" target="_blank" rel="noopener">KhalsuuChat github repository.</a>.
     </p>
 
     <h3> Don't worry, your credentials are secured by Google</h3>

@@ -28,15 +28,13 @@ export default {
   }, 
   methods: {
     getMessages(){
-      console.log("running getmessages by emit.")
-      console.log(this.msg_array)
       this.msg_array = []
       let ref = firebase.database().ref('/messages')
 
       ref.orderByKey().once('value', snap => {
           snap.forEach( msg => {
               const msg_details = msg.val()
-              this.msg_array.push(msg_details)
+              // this.msg_array.push(msg_details)
               // this.msg_array = [...this.msg_array, msg_details]
               console.log(msg_details)
           })
@@ -58,7 +56,6 @@ export default {
       
       messageRef.push(messageObj)
 
-      // this.msg_array = [...this.msg_array, messageObj]
     },
     changeState(){
       this.userState = !this.userState
@@ -71,10 +68,6 @@ export default {
     mainData.on('child_added', (data) => {
       console.log(data.val())
       this.msg_array = [...this.msg_array, data.val()]
-    })
-
-    firebase.auth().onAuthStateChanged( () => {
-      console.log(this.userState)
     })
   }
 }
